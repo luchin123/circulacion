@@ -1,0 +1,38 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if form.instance.id != None %}
+                <h1>Editar Empresa
+                    <span class="small pull-right">
+                        <a href="{% url 'front:persona' %}" class="btn btn-primary">Crear Empresa</a>
+                        <a href="{% url 'front:personas' %}" class="btn btn-primary">Ver todas las Empresas</a>
+                    </span>
+                </h1>
+            {% else %}
+                <h1>Crear Empresa
+                <span class="small pull-right">
+                    <a href="{% url 'front:personas' %}" class="btn btn-primary">Ver todas las Empresa</a>
+                </span>
+            </h1>
+            {% endif %}
+            <form action="" method="post" enctype="multipart/form-data">
+                {% for field in  form %}
+                    <div class="form-group">
+                        <label for="">{{ field.label }}:</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block title %}Listas{% endblock title %}

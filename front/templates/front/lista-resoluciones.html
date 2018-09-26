@@ -1,0 +1,57 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Consultar Resoluciones
+                <span class="small pull-right">
+                    <a href="{% url 'front:resolucion_entidad' id_entidad=entidad.id id=0 %}" class="btn btn-primary">Crear Resolucion</a>
+                </span>
+            </h1>
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item text-center"><strong>Consulta de la Entidad: </strong> {{ persona }}</li>
+        <li class="list-group-item text-center"><strong>Numero Documento de Identidad: </strong> {{ persona.dni }}</li>
+        <li class="list-group-item text-center"><strong>Numero de Licencia: </strong> {{ persona.licencia.numero_licencia }}</li>
+        <li class="list-group-item text-center"><strong>Categoria: </strong> {{ persona.licencia.categoria }}</li>
+        <li class="list-group-item text-center"><strong>Clase: </strong> {{ persona.licencia.clase }}</li>
+        <li class="list-group-item text-center"><strong>Vigente Hasta: </strong> {{ persona.licencia.fecha_revalidacion }}</li>
+        <li class="list-group-item text-center"><strong>Estado de Licencia: </strong>{{ persona.licencia.get_estado_display }}</li>
+    </ul>
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Razon Social</th>
+            <th>Resolucion N°</th>
+            <th>N° Cupos</th>
+            <th>Ruta</th>
+            <th>Representante</th>
+            <th>Vehiculo</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for resolucion in entidad.resolucion_set.all %}
+            <tr>
+                <td>{{ resolucion.razon_social }}</td>
+                <td>{{ resolucion.resolucion_autorizacion }}</td>
+                <td>{{ resolucion.nro_cupos }}</td>
+                <td>{{ resolucion.ruta_autorizada }}</td>
+                <td>{{ resolucion.representante_legal }}</td>
+                <td>{{ resolucion.vehiculo }}</td>
+                <td>{{ resolucion.fechainicio_periodo }}</td>
+                <td>{{ resolucion.fechafin_periodo }}</td>
+                <td><a href="{% url 'front:resolucion_entidad' id_entidad=entidad.id id=resolucion.id %}">Editar</a></td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="12" class="text-center">No existen datos</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
+
+{% block title %}Resoluciones{% endblock title %}

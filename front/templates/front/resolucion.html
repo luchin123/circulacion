@@ -1,0 +1,38 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if form.instance.id != None %}
+                <h1>Editar Resolucion para {{entidad}} ({{entidad.razon_social}})
+                    <span class="small pull-right">
+                        <a href="{% url 'front:resoluciones_entidad' entidad.id %}" class="btn btn-primary">Ver todas sus Resoluciones</a>
+                        <a href="{% url 'front:resolucion_entidad' id_entidad=entidad.id id=0 %}" class="btn btn-primary">Crear nueva Resolucion</a>
+                    </span>
+                </h1>
+            {% else %}
+                <h1>Crear Resoluciones para {{entidad}} ({{entidad.razon_social}})
+                    <span class="small pull-right">
+                        <a href="{% url 'front:resoluciones_entidad' entidad.id %}" class="btn btn-primary">Ver todas sus Resoluciones</a>
+                    </span>
+                </h1>
+            {% endif %}
+            <form action="" method="post">
+                {% for field in  form %}
+                    <div class="form-group">
+                        <label for="">{{ field.label }}:</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block title %}Resoluciones{% endblock title %}

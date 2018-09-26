@@ -1,0 +1,43 @@
+{% extends "front/base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if form.instance.id != None %}
+                <h1>Editar Tarjeta
+                    <span class="small pull-right">
+                        <a href="{% url 'front:licencia' %}" class="btn btn-primary">Crear Tarjeta</a>
+                        <a href="{% url 'front:consulta' %}" class="btn btn-primary">Ver todas las Tarjetas</a>
+                    </span>
+                </h1>
+            {% else %}
+                <h1>Crear Tarjeta
+                <span class="small pull-right">
+                    <a href="{% url 'front:consulta' %}" class="btn btn-primary">Ver todas las tarjetas</a>
+                </span>
+            </h1>
+            {% endif %}
+            <form action="" method="post">
+                <div class="form-group">
+                    <label for="">Resolucion:</label>
+                    <input type="text" class="form-control ac-persona" placeholder="Ingrese la Resolucion" required value="{{form.instance.periodo_Circulacion}}">
+                    <input type="hidden" id="id_periodo_Circulacion" value="{{form.instance.periodo_Circulacion.pk}}" name="resolucion">
+                </div>
+                {% for field in  form %}
+                    <div class="form-group">
+                        <label for="">{{ field.label }}:</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block title %}Consultas{% endblock title %}

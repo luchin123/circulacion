@@ -8,11 +8,10 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 
-from base.models import Licencia
-from base.models import Persona, Sancion
-from base.forms import PersonaForm, LicenciaForm, SancionForm
+from base.models import *
+#from base.forms import PersonaForm, LicenciaForm, SancionForm
 
-from front.utils import crear_enlace, timestamp_a_fecha, sancionar_persona
+from front.utils import crear_enlace, timestamp_a_fecha
 
 from collections import OrderedDict
 import json
@@ -39,7 +38,7 @@ def the_login(request):
 
     return render(request, 'front/login.html')
 
-    def consulta(request):
+def consulta(request):
     return render(request, 'front/consulta-lista.html')
 
 def consulta_json(request):
@@ -369,7 +368,7 @@ def empresas_json(request):
 
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
-    @login_required
+@login_required
 def resolucion_entidad(request, id_persona, id):
     entidad=Entidad.objects.get(id=id_entidad)
     s = None

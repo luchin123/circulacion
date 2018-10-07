@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^consultas/json/$', views.consulta_json, name = 'consulta_json'),
     url(r'^empresas/$', views.empresas, name = 'empresas'),
     url(r'^empresas/json/$', views.empresas_json, name = 'empresas_json'),
+    url(r'^empresa/$', views.empresa, name = 'empresa'),
     url(r'^resolucion/(?P<id_entidad>.*)/(?P<id>.*)$', views.resolucion_entidad, name = 'resolucion_entidad'),
     url(r'^resoluciones/(?P<_id>.*)$', views.resoluciones_entidad, name = 'resoluciones_entidad'),
 ]

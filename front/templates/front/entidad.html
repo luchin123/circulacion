@@ -6,14 +6,14 @@
             {% if form.instance.id != None %}
                 <h1>Editar Empresa
                     <span class="small pull-right">
-                        <a href="{% url 'front:persona' %}" class="btn btn-primary">Crear Empresa</a>
-                        <a href="{% url 'front:personas' %}" class="btn btn-primary">Ver todas las Empresas</a>
+                        <a href="{% url 'front:empresa' %}" class="btn btn-primary">Crear Empresa</a>
+                        <a href="{% url 'front:empresas' %}" class="btn btn-primary">Ver todas las Empresas</a>
                     </span>
                 </h1>
             {% else %}
                 <h1>Crear Empresa
                 <span class="small pull-right">
-                    <a href="{% url 'front:personas' %}" class="btn btn-primary">Ver todas las Empresa</a>
+                    <a href="{% url 'front:empresas' %}" class="btn btn-primary">Ver todas las Empresa</a>
                 </span>
             </h1>
             {% endif %}

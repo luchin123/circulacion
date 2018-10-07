@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 
 from base.models import *
-#from base.forms import PersonaForm, LicenciaForm, SancionForm
+from base.forms import EntidadForm, Periodo_CirculacionForm, Tarjeta_CirculacionForm
 
 from front.utils import crear_enlace, timestamp_a_fecha
 
@@ -367,6 +367,33 @@ def empresas_json(request):
     data['total_rows'] = total_rows
 
     return HttpResponse(json.dumps(data), content_type = "application/json")
+
+@login_required
+def empresa(request, id=None):
+    p=None
+    if id is not None:
+        p=Entidad.objects.get(id=id)
+    if request.method == 'POST':
+        if p is None:
+            form = EntidadForm(request.POST, request.FILES)
+        else:
+            form = EntidadForm(request.POST,request.FILES,instance=p)
+        if form.is_valid():
+            empresa = form.save(commit=False)
+            empresa.save()
+            if p is None:
+                messages.warning(request, 'Se ha creado una Empresa.')
+            else:
+                messages.warning(request, 'Se ha Actualizado una Emoresa.')
+            return HttpResponseRedirect(reverse('front:empresas'))
+        else:
+            return render(request, 'front/entidad.html', {'form': form})
+    else:
+        if p is None:
+            form = EntidadForm()   
+        else:
+            form = EntidadForm(instance=p)
+        return render(request, 'front/entidad.html', {'form': form})
 
 @login_required
 def resolucion_entidad(request, id_persona, id):

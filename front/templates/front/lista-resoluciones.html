@@ -12,12 +12,9 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item text-center"><strong>Consulta de la Entidad: </strong> {{ persona }}</li>
-        <li class="list-group-item text-center"><strong>Numero Documento de Identidad: </strong> {{ persona.dni }}</li>
-        <li class="list-group-item text-center"><strong>Numero de Licencia: </strong> {{ persona.licencia.numero_licencia }}</li>
-        <li class="list-group-item text-center"><strong>Categoria: </strong> {{ persona.licencia.categoria }}</li>
-        <li class="list-group-item text-center"><strong>Clase: </strong> {{ persona.licencia.clase }}</li>
-        <li class="list-group-item text-center"><strong>Vigente Hasta: </strong> {{ persona.licencia.fecha_revalidacion }}</li>
-        <li class="list-group-item text-center"><strong>Estado de Licencia: </strong>{{ persona.licencia.get_estado_display }}</li>
+        <li class="list-group-item text-center"><strong>Razon Social: </strong> {{ entidad.razon_social }}</li>
+        <li class="list-group-item text-center"><strong>Direccion: </strong> {{ entidad.direccion }}</li>
+        <li class="list-group-item text-center"><strong>Telefono: </strong> {{ entidad.telefono }}</li>
     </ul>
     <table class="table table-bordered table-striped">
     <thead>

@@ -9,7 +9,7 @@
             filter_reset : ".reset",
             //filter_cssFilter: ['', 'datepicker', '', '', '', '', '']
             filter_formatter: {
-                14 : function($cell, indx){
+                11 : function($cell, indx){
                     return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
                         // from : '08/01/2013', // default from date
                         // to   : '1/18/2014',  // default to date
@@ -20,7 +20,7 @@
                         dateFormat: 'dd M yy',
                     });
                 },
-                15 : function($cell, indx){
+                12 : function($cell, indx){
                     return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
                         // from : '08/01/2013', // default from date
                         // to   : '1/18/2014',  // default to date

@@ -95,7 +95,7 @@ class Tarjeta_CirculacionForm(ModelForm):
     )
     class Meta:
         model = Tarjeta_Circulacion
-        exclude = ('persona',)
+        exclude = ('resolucion_autorizacion',)
         widgets = {
             'propietario': TextInput(attrs={
                 'class': 'form-control',
@@ -120,8 +120,9 @@ class Tarjeta_CirculacionForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'infraccion',
             }),
-            'combustible': Select(attrs={
+            'combustible': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'combustible',
             }),
             'nro_ruta': TextInput(attrs={
                 'class': 'form-control',

@@ -58,7 +58,7 @@ def consulta_json(request):
 
     data = {
         'headers': [
-            'Resolucion', 'Propietario', 'Placa', 'Clase', 'Marca', 'Fabricacion', 'Modelo', 'Combustible','Ruta','Color','Pasajeros','Asientos','Poliza','Fecha Exp','Fecha' 'Acciones'
+            'Resolucion', 'Propietario', 'Placa', 'Clase', 'Marca', 'Fabricacion', 'Modelo','Ruta','Pasajeros','Poliza','Fecha Exp','Fecha' 'Acciones'
         ]
 
     }
@@ -87,24 +87,15 @@ def consulta_json(request):
         tarjetas = tarjetas.filter(modelo = request.GET.get('filter[6]'))
 
     if 'filter[7]' in filters:
-        tarjetas = tarjetas.filter(combustible = request.GET.get('filter[7]'))
-
-    if 'filter[8]' in filters:
         tarjetas = tarjetas.filter(ruta = request.GET.get('filter[8]'))
 
-    if 'filter[9]' in filters:
-        tarjetas = tarjetas.filter(color = request.GET.get('filter[9]'))
-
-    if 'filter[10]' in filters:
+    if 'filter[8]' in filters:
         tarjetas = tarjetas.filter(pasajeros = request.GET.get('filter[10]'))
 
-    if 'filter[11]' in filters:
-        tarjetas = tarjetas.filter(asientos = request.GET.get('filter[11]'))
-
-    if 'filter[12]' in filters:
+    if 'filter[9]' in filters:
         tarjetas = tarjetas.filter(poliza = request.GET.get('filter[12]'))
 
-    if 'filter[13]' in filters:
+    if 'filter[10]' in filters:
         str_fecha = request.GET.get('filter[13]')
         if str_fecha[:2] == '<=':
             fecha = str_fecha[2:12]
@@ -117,7 +108,7 @@ def consulta_json(request):
             final = timestamp_a_fecha(str_fecha[-13:][:10], '%Y-%m-%d')
             tarjetas = tarjetas.distinct().filter(fecha_expedicion__range = (inicial, final))
 
-    if 'filter[14]' in filters:
+    if 'filter[11]' in filters:
         str_fecha = request.GET.get('filter[14]')
         if str_fecha[:2] == '<=':
             fecha = str_fecha[2:12]
@@ -160,34 +151,22 @@ def consulta_json(request):
         tarjetas = tarjetas.order_by('%smodelo' % signo)
 
     if 'column[7]' in cols:
-        signo = '' if request.GET.get('column[7]') == '0' else '-'
-        tarjetas = tarjetas.order_by('%scombustible' % signo)
-
-    if 'column[8]' in cols:
         signo = '' if request.GET.get('column[8]') == '0' else '-'
         tarjetas = tarjetas.order_by('%sruta' % signo)
 
-    if 'column[9]' in cols:
-        signo = '' if request.GET.get('column[9]') == '0' else '-'
-        tarjetas = tarjetas.order_by('%scolor' % signo)
-
-    if 'column[10]' in cols:
+    if 'column[8]' in cols:
         signo = '' if request.GET.get('column[10]') == '0' else '-'
         tarjetas = tarjetas.order_by('%spasajeros' % signo)
 
-    if 'column[11]' in cols:
-        signo = '' if request.GET.get('column[11]') == '0' else '-'
-        tarjetas = tarjetas.order_by('%sasientos' % signo)
-
-    if 'column[12]' in cols:
+    if 'column[9]' in cols:
         signo = '' if request.GET.get('column[12]') == '0' else '-'
         tarjetas = tarjetas.order_by('%spoliza' % signo)
 
-    if 'column[13]' in cols:
+    if 'column[10]' in cols:
         signo = '' if request.GET.get('column[13]') == '0' else '-'
         tarjetas = tarjetas.order_by('%sfecha_expedicion' % signo)
 
-    if 'column[14]' in cols:
+    if 'column[11]' in cols:
         signo = '' if request.GET.get('column[14]') == '0' else '-'
         tarjetas = tarjetas.order_by('%sfecha' % signo)
 
@@ -210,15 +189,12 @@ def consulta_json(request):
             '4': tarjeta.marca,
             '5': tarjeta.fabricacion,
             '6': tarjeta.modelo,
-            '7': tarjeta.combustible,
-            '8': tarjeta.ruta,
-            '9': tarjeta.color,
-            '10': tarjeta.pasajeros,
-            '11': tarjeta.asientos,
-            '12': tarjeta.poliza,
-            '13': tarjeta.fecha_expedicion.strftime('%d/%b/%Y'),
-            '14': tarjeta.fecha.strftime('%d/%b/%Y'),
-            '15': links,
+            '7': tarjeta.ruta,
+            '8': tarjeta.pasajeros,
+            '9': tarjeta.poliza,
+            '10': tarjeta.fecha_expedicion.strftime('%d/%b/%Y'),
+            '11': tarjeta.fecha.strftime('%d/%b/%Y'),
+            '12': links,
         })
         rows.append(obj)
 
@@ -238,9 +214,9 @@ def tarjeta(request, id=None):
         l=Tarjeta_Circulacion.objects.get(id=id)
     if request.method == 'POST':
         if l is None:
-            form = TarjetasForm(request.POST)
+            form = Tarjeta_CirculacionForm(request.POST)
         else:
-            form = TarjetasForm(request.POST,instance=l)
+            form = Tarjeta_CirculacionForm(request.POST,instance=l)
         if form.is_valid():
             tarjeta = form.save(commit=False)
             periodo_circulacion = request.POST.get('periodo_circulacion')
@@ -256,9 +232,9 @@ def tarjeta(request, id=None):
             return render(request, 'front/tarjeta.html', {'form': form})
     else:
         if l is None:
-            form = TarjetasForm()   
+            form = Tarjeta_CirculacionForm()   
         else:
-            form = TarjetasForm(instance=l)
+            form = Tarjeta_CirculacionForm(instance=l)
         return render(request, 'front/tarjeta.html', {'form': form})
 
 @login_required
@@ -290,7 +266,8 @@ def empresas_json(request):
     empresas = Entidad.objects.all().order_by('-pk')
 
     if 'filter[0]' in filters:
-        empresas = empresas.filter(tipo = request.GET.get('filter[0]'))
+        tipo_reverse = dict((v,k) for k, v in Entidad.TIPO)
+        empresas = empresas.filter(tipo = tipo_reverse[request.GET.get('filter[0]')])
 
     if 'filter[1]' in filters:
         empresas = empresas.filter(ruc__icontains = request.GET.get('filter[1]'))
@@ -348,17 +325,17 @@ def empresas_json(request):
     rows = []
     for entidad in empresas:
 
-        links = crear_enlace(reverse('front:entidad', args=[entidad.id]), 'success', 'Ver o Editar', 'edit')
-        links += crear_enlace(reverse('front:periodo_Circulacion', args=[persona.id]), 'danger', 'Ver Resoluciones', 'ban')
+        links = crear_enlace(reverse('front:empresa', args=[entidad.id]), 'success', 'Ver o Editar', 'edit')
+        links += crear_enlace(reverse('front:resoluciones_entidad', args=[entidad.id]), 'danger', 'Ver Resoluciones', 'ban')
 
         obj = OrderedDict({
-            '0': entidad.tipo,
+            '0': entidad.get_tipo_display(),
             '1': entidad.ruc,
             '2': entidad.razon_social,
             '3': entidad.direccion,
             '4': entidad.telefono,
             '5': entidad.celular,
-            '6': entidad.administracion,
+            '6': entidad.administracion.nombre,
             '7': links,
         })
         rows.append(obj)
@@ -396,20 +373,20 @@ def empresa(request, id=None):
         return render(request, 'front/entidad.html', {'form': form})
 
 @login_required
-def resolucion_entidad(request, id_persona, id):
+def resolucion_entidad(request, id_entidad, id):
     entidad=Entidad.objects.get(id=id_entidad)
     s = None
     if id != '0':
         s = Periodo_Circulacion.objects.get(id=id)
     if s is None:
-        form = ResolucionForm()
+        form = Periodo_CirculacionForm()
     else:
-        form = ResolucionForm(instance=s)
+        form = Periodo_CirculacionForm(instance=s)
     if request.method == 'POST':
         if s is None:
-            form = ResolucionForm(request.POST)
+            form = Periodo_CirculacionForm(request.POST)
         else:
-            form = ResolucionForm(request.POST, instance=s)
+            form = Periodo_CirculacionForm(request.POST, instance=s)
 
         if form.is_valid():
             resolucion = form.save(commit=False)
@@ -421,9 +398,9 @@ def resolucion_entidad(request, id_persona, id):
                 messages.warning(request, 'Se ha actualizado una Resolucion para %s.' % entidad)
             return HttpResponseRedirect(reverse('front:personas'))
         else:
-            return render(request, 'front/resoluciones.html', {'form': form, 'entidad':entidad})
+            return render(request, 'front/resolucion.html', {'form': form, 'entidad':entidad})
     else:
-        return render(request, 'front/resoluciones.html', {'form': form, 'entidad':entidad})
+        return render(request, 'front/resolucion.html', {'form': form, 'entidad':entidad})
 
 
 @login_required

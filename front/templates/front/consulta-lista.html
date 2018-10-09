@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <h1>Consultar Tarjeta Circulacion
                 <span class="small pull-right">
-                    <a href="{% url 'front:empresas' %}" class="btn btn-primary btn-sm">Crear Tarjeta</a>
+                    <a href="{% url 'front:tarjeta' %}" class="btn btn-primary btn-sm">Crear Tarjeta</a>
                     <button class="btn btn-default btn-sm reset"><i class="fa fa-filter"></i> Quitar Filtros</button>
                 </span>
             </h1>
@@ -22,11 +22,8 @@
                 <th>Marca</th>
                 <th>Año Fabricacion</th>
                 <th>Modelo</th>
-                <th>Combustible</th>
                 <th>Ruta</th>
-                <th>Color</th>
                 <th>Pasajeros</th>
-                <th>Asientos</th>
                 <th>Poliza</th>
                 <th>Fecha Expedicion</th>
                 <th>Fecha</th>
@@ -51,12 +48,9 @@
                 <td>11</td>
                 <td>12</td>
                 <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
             </tr>
             <tr>
-              <th colspan="10" class="ts-pager form-horizontal">
+              <th colspan="13" class="ts-pager form-horizontal">
                 <button type="button" class="btn btn-xs first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
                 <button type="button" class="btn btn-xs prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
                 <span class="pagedisplay"></span> <!-- this can be any element, including an input -->

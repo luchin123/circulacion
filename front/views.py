@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 
 from base.models import *
-from base.forms import EntidadForm, Periodo_CirculacionForm, Tarjeta_CirculacionForm
+from base.forms import EntidadForm, PeriodoCirculacionForm, TarjetaCirculacionForm
 
 from front.utils import crear_enlace, timestamp_a_fecha
 
@@ -63,10 +63,10 @@ def consulta_json(request):
 
     }
 
-    tarjetas = Tarjeta_Circulacion.objects.all().order_by('-pk')
+    tarjetas = TarjetaCirculacion.objects.all().order_by('-pk')
 
     if 'filter[0]' in filters:
-        tarjetas = tarjetas.filter(periodo_Circulacion__resolucion_autorizacion__contains = request.GET.get('filter[0]'))
+        tarjetas = tarjetas.filter(resolucion_autorizacion__resolucion_autorizacion__contains = request.GET.get('filter[0]'))
 
     if 'filter[1]' in filters:
         tarjetas = tarjetas.filter(propietario__icontains = request.GET.get('filter[1]'))
@@ -78,7 +78,7 @@ def consulta_json(request):
         tarjetas = tarjetas.filter(clase__icontains = request.GET.get('filter[3]'))
 
     if 'filter[4]' in filters:
-        tarjetas = tarjetas.filter(Marca = request.GET.get('filter[4]'))
+        tarjetas = tarjetas.filter(marca = request.GET.get('filter[4]'))
 
     if 'filter[5]' in filters:
         tarjetas = tarjetas.filter(fabricacion = request.GET.get('filter[5]'))
@@ -182,16 +182,16 @@ def consulta_json(request):
        # -*-links += crear_enlace(reverse('reporte:licencia_print2', args=[licencia.id]), 'info', 'Imprimir Reverso', 'print')
 
         obj = OrderedDict({
-            '0': tarjeta.periodo_circulacion.resolucion,
+            '0': tarjeta.resolucion_autorizacion.resolucion_autorizacion,
             '1': tarjeta.propietario,
             '2': tarjeta.placa,
             '3': tarjeta.clase,
             '4': tarjeta.marca,
-            '5': tarjeta.fabricacion,
+            '5': tarjeta.anio_fabricacion,
             '6': tarjeta.modelo,
-            '7': tarjeta.ruta,
+            '7': tarjeta.nro_ruta,
             '8': tarjeta.pasajeros,
-            '9': tarjeta.poliza,
+            '9': tarjeta.poliza_seguro,
             '10': tarjeta.fecha_expedicion.strftime('%d/%b/%Y'),
             '11': tarjeta.fecha.strftime('%d/%b/%Y'),
             '12': links,
@@ -211,17 +211,17 @@ def index(request):
 def tarjeta(request, id=None):
     l=None
     if id is not None:
-        l=Tarjeta_Circulacion.objects.get(id=id)
+        l=TarjetaCirculacion.objects.get(id=id)
     if request.method == 'POST':
         if l is None:
-            form = Tarjeta_CirculacionForm(request.POST)
+            form = TarjetaCirculacionForm(request.POST)
         else:
-            form = Tarjeta_CirculacionForm(request.POST,instance=l)
+            form = TarjetaCirculacionForm(request.POST,instance=l)
         if form.is_valid():
             tarjeta = form.save(commit=False)
-            periodo_circulacion = request.POST.get('periodo_circulacion')
-            periodo_circulacion = periodo_circulacion.objects.get(id = periodo_circulacion)
-            tarjeta.periodo_circulacion = periodo_circulacion
+            resolucion_autorizacion = request.POST.get('resolucion')
+            resolucion_autorizacion = PeriodoCirculacion.objects.get(id = resolucion_autorizacion)
+            tarjeta.resolucion_autorizacion = resolucion_autorizacion
             tarjeta.save()
             if l is None:
                 messages.warning(request, 'Se ha creado una tarjeta.')
@@ -229,12 +229,13 @@ def tarjeta(request, id=None):
                 messages.warning(request, 'Se ha Actualizado una tarjeta.')
             return HttpResponseRedirect(reverse('front:consulta'))
         else:
+            print form.errors
             return render(request, 'front/tarjeta.html', {'form': form})
     else:
         if l is None:
-            form = Tarjeta_CirculacionForm()   
+            form = TarjetaCirculacionForm()   
         else:
-            form = Tarjeta_CirculacionForm(instance=l)
+            form = TarjetaCirculacionForm(instance=l)
         return render(request, 'front/tarjeta.html', {'form': form})
 
 @login_required
@@ -258,7 +259,7 @@ def empresas_json(request):
 
     data = {
         'headers': [
-            'Tipo', 'Ruc', 'Razon Social', 'Direccion', 'Telefono','Celular','Administracion', 'Acciones'
+            'Tipo', 'Ruc', 'Razon Social', 'Direccion', 'Telefono','Celular', 'Acciones'
         ]
 
     }
@@ -283,9 +284,6 @@ def empresas_json(request):
 
     if 'filter[5]' in filters:
         empresas = empresas.filter(celular__icontains = request.GET.get('filter[5]'))
-
-    if 'filter[6]' in filters:
-        empresas = empresas.filter(administracion__icontains = request.GET.get('filter[6]'))
 
     
 
@@ -313,10 +311,6 @@ def empresas_json(request):
         signo = '' if request.GET.get('column[5]') == '0' else '-'
         empresas = empresas.order_by('%scelular' % signo)
 
-    if 'column[6]' in cols:
-        signo = '' if request.GET.get('column[6]') == '0' else '-'
-        empresas = empresas.order_by('%sadministracion' % signo)
-
 
     total_rows = empresas.count()
 
@@ -335,7 +329,6 @@ def empresas_json(request):
             '3': entidad.direccion,
             '4': entidad.telefono,
             '5': entidad.celular,
-            '6': entidad.administracion.nombre,
             '7': links,
         })
         rows.append(obj)
@@ -377,16 +370,16 @@ def resolucion_entidad(request, id_entidad, id):
     entidad=Entidad.objects.get(id=id_entidad)
     s = None
     if id != '0':
-        s = Periodo_Circulacion.objects.get(id=id)
+        s = PeriodoCirculacion.objects.get(id=id)
     if s is None:
-        form = Periodo_CirculacionForm()
+        form = PeriodoCirculacionForm()
     else:
-        form = Periodo_CirculacionForm(instance=s)
+        form = PeriodoCirculacionForm(instance=s)
     if request.method == 'POST':
         if s is None:
-            form = Periodo_CirculacionForm(request.POST)
+            form = PeriodoCirculacionForm(request.POST)
         else:
-            form = Periodo_CirculacionForm(request.POST, instance=s)
+            form = PeriodoCirculacionForm(request.POST, instance=s)
 
         if form.is_valid():
             resolucion = form.save(commit=False)
@@ -396,7 +389,7 @@ def resolucion_entidad(request, id_entidad, id):
                 messages.warning(request, 'Se ha creado una resolucion para %s.' % entidad)
             else:
                 messages.warning(request, 'Se ha actualizado una Resolucion para %s.' % entidad)
-            return HttpResponseRedirect(reverse('front:personas'))
+            return HttpResponseRedirect(reverse('front:empresas'))
         else:
             return render(request, 'front/resolucion.html', {'form': form, 'entidad':entidad})
     else:

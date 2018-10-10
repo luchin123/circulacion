@@ -2,7 +2,7 @@
 
 from django.forms import ModelForm, TextInput, Select, Textarea, DateField, CheckboxInput, FileInput
 
-from models import Entidad, Periodo_Circulacion, Tarjeta_Circulacion
+from models import Entidad, PeriodoCirculacion, TarjetaCirculacion
 from django.conf import settings
 
 class EntidadForm(ModelForm):
@@ -19,29 +19,25 @@ class EntidadForm(ModelForm):
             }),
             'razon_social': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Razon Social',
+                'placeholder': u'Razón Social',
             }),
             'direccion': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Direccion',
+                'placeholder': u'Dirección',
             }),
             'telefono': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Telefono',
+                'placeholder': u'Teléfono',
             }),
             'celular': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Celular',
             }),
-            'administracion': TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Administracion',
-            }),
           
         }
 
 
-class Periodo_CirculacionForm(ModelForm):
+class PeriodoCirculacionForm(ModelForm):
     fechainicio_periodo = DateField(
         input_formats=settings.DATE_INPUT_FORMATS,
         widget=TextInput(attrs={
@@ -57,7 +53,7 @@ class Periodo_CirculacionForm(ModelForm):
     )
 
     class Meta:
-        model = Periodo_Circulacion
+        model = PeriodoCirculacion
         exclude = ('razon_social',)
         widgets = {
             'resolucion_autorizacion': TextInput(attrs={
@@ -80,7 +76,7 @@ class Periodo_CirculacionForm(ModelForm):
             }),
         }
 
-class Tarjeta_CirculacionForm(ModelForm):
+class TarjetaCirculacionForm(ModelForm):
     fecha_expedicion = DateField(
         input_formats=settings.DATE_INPUT_FORMATS,
         widget=TextInput(attrs={
@@ -94,51 +90,51 @@ class Tarjeta_CirculacionForm(ModelForm):
         })
     )
     class Meta:
-        model = Tarjeta_Circulacion
+        model = TarjetaCirculacion
         exclude = ('resolucion_autorizacion',)
         widgets = {
             'propietario': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nombres',
+                'placeholder': 'Propietario',
             }),
             'placa': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Numero Papeleta',
+                'placeholder': u'Placa',
             }),
             'clase': Select(attrs={
                 'class': 'form-control',
             }),
             'marca': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Entidad',
+                'placeholder': 'Marca',
             }),
             'anio_fabricacion': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Comisaria',
+                'placeholder': u'Año de fabricación',
             }),
             'modelo': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'infraccion',
+                'placeholder': 'Modelo',
             }),
             'combustible': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'combustible',
+                'placeholder': 'Combustible',
             }),
             'nro_ruta': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'infraccion',
+                'placeholder': u'Número de ruta',
             }),
             'color': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Grado de Alcohol',
+                'placeholder': 'Color',
             }),
             'cilindro': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Carnet',
+                'placeholder': 'Cilindros',
             }),
             'ruedas': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Carnet',
+                'placeholder': 'Ruedas',
             }),
             'nro_motor': TextInput(attrs={
                 'class': 'form-control',

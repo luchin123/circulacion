@@ -6,7 +6,7 @@
             {% if form.instance.id != None %}
                 <h1>Editar Tarjeta
                     <span class="small pull-right">
-                        <a href="{% url 'front:licencia' %}" class="btn btn-primary">Crear Tarjeta</a>
+                        <a href="{% url 'front:tarjeta' %}" class="btn btn-primary">Crear Tarjeta</a>
                         <a href="{% url 'front:consulta' %}" class="btn btn-primary">Ver todas las Tarjetas</a>
                     </span>
                 </h1>
@@ -20,8 +20,8 @@
             <form action="" method="post">
                 <div class="form-group">
                     <label for="">Resolucion:</label>
-                    <input type="text" class="form-control ac-persona" placeholder="Ingrese la Resolucion" required value="{{form.instance.periodo_Circulacion}}">
-                    <input type="hidden" id="id_periodo_Circulacion" value="{{form.instance.periodo_Circulacion.pk}}" name="resolucion">
+                    <input type="text" class="form-control ac-circulacion" placeholder="Buscar la resolución" required value="{{form.instance.resolucion_autorizacion}}">
+                    <input type="hidden" id="id_circulacion" value="{{form.instance.resolucion_autorizacion.pk}}" name="resolucion">
                 </div>
                 {% for field in  form %}
                     <div class="form-group">

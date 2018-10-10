@@ -3,17 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-class Administracion (models.Model):
-	nro_documento = models.CharField(max_length=8, unique=True)
-	nombre = models.CharField(max_length=255)
-	direccion = models.CharField(max_length=255)
-	email = models.CharField(max_length=255)
-	telefono = models.CharField(max_length=255)
-	logo = models.ImageField(upload_to='logo', max_length=100)
-
-	def __str__(self):
-		return  self.nombre
-
 class Entidad (models.Model):
 	TIPO = (
 		('E', 'EMPRESA'),
@@ -25,12 +14,11 @@ class Entidad (models.Model):
 	direccion = models.CharField(max_length=255)
 	telefono = models.CharField(max_length=255)
 	celular = models.CharField(max_length=255)
-	administracion = models.ForeignKey(Administracion)
 
 	def __str__(self):
 		return self.razon_social
 
-class Periodo_Circulacion(models.Model):
+class PeriodoCirculacion(models.Model):
 	TIPO = (
 		('M', 'Mayores'),
 		('N', 'Menores'),
@@ -48,13 +36,13 @@ class Periodo_Circulacion(models.Model):
 		return self.resolucion_autorizacion
 
 import datetime
-class Tarjeta_Circulacion(models.Model):
+class TarjetaCirculacion(models.Model):
 	CLASES = (
 		('A', 'A'),
 		('B', 'B'),
 		('C', 'C'),
 	)
-	resolucion_autorizacion = models.ForeignKey(Periodo_Circulacion)
+	resolucion_autorizacion = models.ForeignKey(PeriodoCirculacion)
 	propietario = models.CharField(max_length=255)
 	placa = models.CharField(max_length=255)
 	clase = models.CharField(max_length=1, choices=CLASES, default='A')

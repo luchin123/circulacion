@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from base.models import Administracion, Entidad, Periodo_Circulacion, Tarjeta_Circulacion
-admin.site.register(Administracion)
+from base.models import Entidad, PeriodoCirculacion, TarjetaCirculacion
+
 admin.site.register(Entidad)
-admin.site.register(Periodo_Circulacion)
-admin.site.register(Tarjeta_Circulacion)
+admin.site.register(PeriodoCirculacion)
+admin.site.register(TarjetaCirculacion)

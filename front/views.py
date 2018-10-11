@@ -178,7 +178,7 @@ def consulta_json(request):
     for tarjeta in tarjetas:
 
         links = crear_enlace(reverse('front:tarjeta', args=[tarjeta.id]), 'success', 'Ver o Editar', 'edit')
-       # -*- links += crear_enlace(reverse('reporte:licencia_print', args=[licencia.id]), 'success', 'Imprimir Anverso', 'print')
+        links += crear_enlace(reverse('reporte:tarjeta_print', args=[tarjeta.id]), 'success', 'Imprimir', 'print')
        # -*-links += crear_enlace(reverse('reporte:licencia_print2', args=[licencia.id]), 'info', 'Imprimir Reverso', 'print')
 
         obj = OrderedDict({

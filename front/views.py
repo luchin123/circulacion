@@ -19,7 +19,7 @@ import json
 
 def the_login(request):
     if(request.user.is_authenticated()):
-        return HttpResponseRedirect(reverse('front:index'))
+        return HttpResponseRedirect(reverse('front:consulta'))
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -29,7 +29,7 @@ def the_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('front:index'))
+                return HttpResponseRedirect(reverse('front:consulta'))
             else:
                 messages.warning(request, 'El usuario no está activo.')
         else:

@@ -71,11 +71,11 @@ class ImpresionTarjeta:
         w, h = categoria.wrap(doc.width, doc.topMargin)
         categoria.drawOn(canvas, 52 * mm, 16.9 * mm)
 
-        categoria = Paragraph(self.tarjeta.fecha_expedicion, normal_custom(8.5, TA_LEFT))
+        categoria = Paragraph(self.tarjeta.fecha_expedicion.strftime('%d/%m/%Y'), normal_custom(8.5, TA_LEFT))
         w, h = categoria.wrap(doc.width, doc.topMargin)
         categoria.drawOn(canvas, 53 * mm, 12.5 * mm)
 
-        categoria = Paragraph(self.tarjeta.fecha, normal_custom(8.5, TA_LEFT))
+        categoria = Paragraph(self.tarjeta.fecha.strftime('%d/%m/%Y'), normal_custom(8.5, TA_LEFT))
         w, h = categoria.wrap(doc.width, doc.topMargin)
         categoria.drawOn(canvas, 53 * mm, 12.5 * mm)
 
@@ -92,7 +92,7 @@ class ImpresionTarjeta:
         w, h = asientos.wrap(doc.width, doc.topMargin)
         asientos.drawOn(canvas, 52 * mm, 56.9 * mm)
 
-        asientos = Paragraph(self.tarjeta.asientos, normal_custom(8.5, TA_LEFT))
+        asientos = Paragraph(str(self.tarjeta.asientos), normal_custom(8.5, TA_LEFT))
         w, h = asientos.wrap(doc.width, doc.topMargin)
         asientos.drawOn(canvas, 56 * mm, 52.5 * mm)
 
@@ -108,7 +108,7 @@ class ImpresionTarjeta:
         w, h = ruedas.wrap(doc.width, doc.topMargin)
         ruedas.drawOn(canvas, 52 * mm, 36.9 * mm)
 
-        ruedas = Paragraph(self.tarjeta.ruedas, normal_custom(8.5, TA_LEFT))
+        ruedas = Paragraph(str(self.tarjeta.ruedas), normal_custom(8.5, TA_LEFT))
         w, h = ruedas.wrap(doc.width, doc.topMargin)
         ruedas.drawOn(canvas, 56 * mm, 32.5 * mm)
 
@@ -116,7 +116,7 @@ class ImpresionTarjeta:
         w, h = pesoneto.wrap(doc.width, doc.topMargin)
         pesoneto.drawOn(canvas, 52 * mm, 26.9 * mm)
 
-        pesoneto = Paragraph(self.tarjeta.peso_seco, normal_custom(8.5, TA_LEFT))
+        pesoneto = Paragraph(str(self.tarjeta.peso_seco), normal_custom(8.5, TA_LEFT))
         w, h = pesoneto.wrap(doc.width, doc.topMargin)
         pesoneto.drawOn(canvas, 56 * mm, 22.5 * mm)
 
@@ -124,7 +124,7 @@ class ImpresionTarjeta:
         w, h = pesobruto.wrap(doc.width, doc.topMargin)
         pesobruto.drawOn(canvas, 52 * mm, 16.9 * mm)
 
-        pesobruto = Paragraph(self.tarjeta.peso_bruto, normal_custom(8.5, TA_LEFT))
+        pesobruto = Paragraph(str(self.tarjeta.peso_bruto), normal_custom(8.5, TA_LEFT))
         w, h = pesobruto.wrap(doc.width, doc.topMargin)
         pesobruto.drawOn(canvas, 56 * mm, 12.5 * mm)
 
@@ -157,7 +157,7 @@ class ImpresionTarjeta:
         p = Paragraph('Razon Social', negrita_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph(self.tarjeta.resolucion_autorizacion.razon_social, normal_custom(8.5, TA_LEFT))
+        p = Paragraph(self.tarjeta.resolucion_autorizacion.razon_social.razon_social, normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Propietario', negrita_custom(8.5, TA_LEFT))
@@ -191,7 +191,7 @@ class ImpresionTarjeta:
         p = Paragraph(u'Año Fabricacion', negrita_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph(self.tarjeta.anio_fabricacion, normal_custom(8.5, TA_LEFT))
+        p = Paragraph(str(self.tarjeta.anio_fabricacion), normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Color', negrita_custom(8.5, TA_LEFT))
@@ -203,7 +203,7 @@ class ImpresionTarjeta:
         p = Paragraph('Pasajeros', negrita_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph(self.tarjeta.pasajeros, normal_custom(8.5, TA_LEFT))
+        p = Paragraph(str(self.tarjeta.pasajeros), normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Motor Nro', negrita_custom(8.5, TA_LEFT))
@@ -221,7 +221,7 @@ class ImpresionTarjeta:
         p = Paragraph('Ruta', negrita_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph(self.tarjeta.nro_ruta, normal_custom(8.5, TA_LEFT))
+        p = Paragraph(str(self.tarjeta.nro_ruta), normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Origen', negrita_custom(8.5, TA_LEFT))
@@ -239,8 +239,8 @@ class ImpresionTarjeta:
         p = Paragraph('Numero de Resolucion', negrita_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph(self.tarjeta.resolucion_autorizacion, normal_custom(8.5, TA_LEFT))
-        elements.append(p)
+        #p = Paragraph(self.tarjeta.resolucion_autorizacion, normal_custom(8.5, TA_LEFT))
+        #elements.append(p)
 
         doc = BaseDocTemplate(buffer,
                               pagesize = self.pagesize)

@@ -184,7 +184,7 @@ def consulta_json(request):
         if tarjeta.fecha_expedicion is None:
             fecha = 'Sin datos'
         else:
-            fecha tarjeta.fecha_expedicion.strftime('%d/%b/%Y')
+            fecha = tarjeta.fecha_expedicion.strftime('%d/%b/%Y')
         obj = OrderedDict({
             '0': tarjeta.resolucion_autorizacion.resolucion_autorizacion,
             '1': tarjeta.propietario,

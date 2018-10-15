@@ -20,8 +20,8 @@ class Entidad (models.Model):
 
 class PeriodoCirculacion(models.Model):
 	TIPO = (
-		('M', 'Mayores'),
-		('N', 'Menores'),
+		('1', 'Mayores'),
+		('2', 'Menores'),
 	)
 	razon_social = models.ForeignKey(Entidad)
 	resolucion_autorizacion = models.CharField(max_length=255)
@@ -37,15 +37,10 @@ class PeriodoCirculacion(models.Model):
 
 import datetime
 class TarjetaCirculacion(models.Model):
-	CLASES = (
-		('A', 'A'),
-		('B', 'B'),
-		('C', 'C'),
-	)
 	resolucion_autorizacion = models.ForeignKey(PeriodoCirculacion)
 	propietario = models.CharField(max_length=255)
 	placa = models.CharField(max_length=255)
-	clase = models.CharField(max_length=1, choices=CLASES, default='A')
+	clase = models.CharField(max_length=255)
 	marca = models.CharField(max_length=255)
 	anio_fabricacion = models.IntegerField()
 	modelo = models.CharField(max_length=255)

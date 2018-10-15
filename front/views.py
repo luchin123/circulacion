@@ -181,6 +181,10 @@ def consulta_json(request):
         links += crear_enlace(reverse('reporte:tarjeta_print', args=[tarjeta.id]), 'success', 'Imprimir', 'print')
        # -*-links += crear_enlace(reverse('reporte:licencia_print2', args=[licencia.id]), 'info', 'Imprimir Reverso', 'print')
 
+        if tarjeta.fecha_expedicion is None:
+            fecha = 'Sin datos'
+        else:
+            fecha tarjeta.fecha_expedicion.strftime('%d/%b/%Y')
         obj = OrderedDict({
             '0': tarjeta.resolucion_autorizacion.resolucion_autorizacion,
             '1': tarjeta.propietario,

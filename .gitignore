@@ -4,3 +4,5 @@ firmas*
 *.pyc
 migrations
 .env
+.sql
+

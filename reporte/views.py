@@ -17,7 +17,7 @@ from reportlab.graphics import renderPDF
 from reportlab.pdfgen import canvas
 from reportlab.graphics.barcode import code39, code93, qr
 
-from base.models import TarjetaCirculacion
+from base.models import TarjetaCirculacion, Autoridad
 
 def normal_custom(size, alignment):
     return ParagraphStyle(
@@ -98,6 +98,13 @@ class ImpresionTarjeta:
         logo = 'static/pag2.jpg'
         canvas.drawImage(logo, 0 * cm, 0 * cm, width = (8.5 * cm), height = (5.28 * cm))
 
+        autoridad = Autoridad.objects.filter(activo = True)
+        if autoridad.count() > 0:
+            autoridad = autoridad[0]
+
+            firma = str(autoridad.firma_autoridad)
+            canvas.drawImage(firma, 54.3 * mm, 2 * cm, width = (2.6 * cm), height = (1 * cm))
+
         asientos = Paragraph(u'Asientos: <strong>'+str(self.tarjeta.asientos)+'</strong>', normal_custom(8.5, TA_LEFT))
         w, h = asientos.wrap(doc.width, doc.topMargin)
         asientos.drawOn(canvas, 52 * mm, 44.1 * mm)
@@ -141,13 +148,13 @@ class ImpresionTarjeta:
         p = Paragraph('Placa: <strong>' + self.tarjeta.placa +'</strong>', normal_custom2(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph('Razon Social: <strong>' + self.tarjeta.resolucion_autorizacion.razon_social.razon_social +'</strong>', normal_custom2(8.5, TA_LEFT))
+        p = Paragraph('Razón Social: <strong>' + self.tarjeta.resolucion_autorizacion.razon_social.razon_social +'</strong>', normal_custom2(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Propietario: <strong>' + self.tarjeta.propietario + '</strong>' , normal_custom2(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph('Fecha de Expedicion: <strong>' + str(self.tarjeta.fecha_expedicion) + '</strong>', normal_custom2(8.5, TA_LEFT))
+        p = Paragraph('Fecha de Expedición: <strong>' + str(self.tarjeta.fecha_expedicion) + '</strong>', normal_custom2(8.5, TA_LEFT))
         elements.append(p)
 
 
@@ -164,7 +171,7 @@ class ImpresionTarjeta:
         p = Paragraph('Modelo: <strong>'+ self.tarjeta.modelo +'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph('Año Fabricacion: <strong>'+ str(self.tarjeta.anio_fabricacion)+'</strong>', normal_custom(8.5, TA_LEFT))
+        p = Paragraph('Año Fabricación: <strong>'+ str(self.tarjeta.anio_fabricacion)+'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Color: <strong>'+ self.tarjeta.color+'</strong>', normal_custom(8.5, TA_LEFT))
@@ -179,16 +186,13 @@ class ImpresionTarjeta:
         p = Paragraph('Serie Nro: <strong>'+self.tarjeta.nro_serie+'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph('Ruta: <strong>'+str(self.tarjeta.nro_ruta)+'</strong>', normal_custom(8.5, TA_LEFT))
+        p = Paragraph('Número de Ruta: <strong>'+str(self.tarjeta.nro_ruta)+'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         p = Paragraph('Origen: <strong>'+ self.tarjeta.origen+'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
-        p = Paragraph('Poliza de Seguros: <strong>'+self.tarjeta.poliza_seguro+'</strong>', normal_custom(8.5, TA_LEFT))
-        elements.append(p)
-
-        p = Paragraph('Numero de Resolucion: <strong>'+str(self.tarjeta.resolucion_autorizacion)+'</strong>', normal_custom(8.5, TA_LEFT))
+        p = Paragraph('Número de Resolución: <strong>'+str(self.tarjeta.resolucion_autorizacion)+'</strong>', normal_custom(8.5, TA_LEFT))
         elements.append(p)
 
         #p = Paragraph(self.tarjeta.resolucion_autorizacion, normal_custom(8.5, TA_LEFT))

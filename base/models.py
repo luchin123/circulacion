@@ -8,7 +8,7 @@ class Entidad (models.Model):
 		('E', 'EMPRESA'),
 		('A', 'ASOCIACIÓN'),
 	)
-	tipo = models.CharField(max_length=1, choices=TIPO, default='EMPRESA')
+	tipo = models.CharField(max_length=1, choices=TIPO, default='E')
 	ruc = models.IntegerField()
 	razon_social = models.CharField(max_length=255)
 	direccion = models.CharField(max_length=255)
@@ -28,7 +28,7 @@ class PeriodoCirculacion(models.Model):
 	nro_cupos = models.IntegerField()
 	ruta_autorizada = models.CharField(max_length=255)
 	representante_legal = models.CharField(max_length=255)
-	vehiculo = models.CharField(max_length=1, choices=TIPO, default='Mayores')
+	vehiculo = models.CharField(max_length=1, choices=TIPO, default='1')
 	fechainicio_periodo = models.DateField()
 	fechafin_periodo = models.DateField()
 
@@ -64,5 +64,15 @@ class TarjetaCirculacion(models.Model):
 	class Meta:
 		verbose_name_plural='Tarjetas'
 
+class Autoridad(models.Model):
+    nombre_autoridad = models.CharField(max_length=255)
+    fecha_inicio_autoridad = models.DateField()
+    fecha_inicio_autoridad = models.DateField()
+    firma_autoridad = models.ImageField(upload_to='firmas_autoridad', max_length=100)
+    activo = models.BooleanField(default=False)
 
-# Create your models here.
+    class Meta:
+        verbose_name_plural='Autoridades'
+
+    def __str__(self):
+        return  self.nombre_autoridad

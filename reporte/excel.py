@@ -28,14 +28,14 @@ def vehiculos_excel(request, id):
 
 	hasta = 'I'
 	sheet.merge_range('A1:%s1' % hasta, 'Municipalidad de Provincial de Urubamba', titulo)
-	sheet.merge_range('A2:%s2' % hasta, 'Listado de Vehiculos', titulo)
+	sheet.merge_range('A2:%s2' % hasta, u'Listado de Vehículos', titulo)
 	sheet.merge_range('A3:%s3' % hasta, empresa.razon_social, titulo)
 
 	sheet.write('A5', 'Propietario', negrita)
 	sheet.write('B5', 'Placa', negrita)
 	sheet.write('C5', 'Clase', negrita)
 	sheet.write('D5', 'Marca', negrita)
-	sheet.write('E5', 'Año Fabricacion', negrita)
+	sheet.write('E5', u'Año Fabricacion', negrita)
 	sheet.write('F5', 'Modelo', negrita)
 	sheet.write('G5', 'Ruta', negrita)
 	sheet.write('H5', 'Pasajeros', negrita)

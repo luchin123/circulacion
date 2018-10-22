@@ -18,5 +18,5 @@ class PeriodoCirculacionFilterViewSet(generics.ListAPIView):
         term = self.request.query_params.get('term', None)
 
         if term is not None:
-            queryset = queryset.filter(resolucion_autorizacion__istartswith = term)
+            queryset = queryset.filter(razon_social__razon_social__icontains = term)
         return queryset

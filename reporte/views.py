@@ -6,18 +6,20 @@ from io import BytesIO
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
+from reportlab.lib.pagesizes import letter, A4, landscape
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, PageBreak, TableStyle
 from reportlab.platypus import PageTemplate, BaseDocTemplate, NextPageTemplate, Frame
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.units import mm, cm, inch
+from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics import renderPDF
 from reportlab.pdfgen import canvas
 from reportlab.graphics.barcode import code39, code93, qr
 
-from base.models import TarjetaCirculacion, Autoridad
+from base.models import TarjetaCirculacion, Autoridad, Entidad
 
 def normal_custom(size, alignment):
     return ParagraphStyle(
@@ -36,6 +38,14 @@ def normal_custom2(size, alignment):
         alignment = alignment,
     )
 
+def normal_custom3(size, alignment):
+    return ParagraphStyle(
+        name = 'normal_custom_%s' % str(size),
+        fontName = 'Helvetica-Bold',
+        fontSize = 6,
+        alignment = alignment,
+    )
+
 
 def negrita_custom(size, alignment):
     return ParagraphStyle(
@@ -43,6 +53,19 @@ def negrita_custom(size, alignment):
         fontName = 'Helvetica-Bold',
         fontSize = size,
         alignment = alignment
+    )
+
+def table_estilo():
+    return TableStyle(
+        [
+            ('FONTNAME', (0,0), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0,0), (-1, -1), 7),
+            ('INNERGRID', (0,0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0,0), (-1, -1), 0.25, colors.black),
+            ('ALIGNMENT', (0,0), (-1, -1), 'CENTER'),
+            ('BOTTOMPADDING', (0,0), (-1, -1), 1),
+            ('TOPPADDING', (0,0), (-1, -1), 1),
+        ]
     )
 
 @login_required
@@ -57,6 +80,25 @@ def tarjeta_print(request, id):
 
     report = ImpresionTarjeta(buffer, tarjeta)
     pdf = report.print_tarjeta()
+ 
+
+    response.write(pdf)
+
+    return response
+
+@login_required
+def vehiculos_pdf(request, id):
+    response = HttpResponse(content_type='application/pdf')
+    
+    buffer = BytesIO()
+
+    try:
+        empresa = get_object_or_404(Entidad, pk = id)
+    except:
+        raise Http404
+
+    report = ImpresionVehiculos(buffer, 'A4')
+    pdf = report.print_vehiculos(empresa)
  
 
     response.write(pdf)
@@ -88,6 +130,10 @@ class ImpresionTarjeta:
         categoria = Paragraph(self.tarjeta.fecha.strftime('%d/%m/%Y'), normal_custom(8.5, TA_LEFT))
         w, h = categoria.wrap(doc.width, doc.topMargin)
         categoria.drawOn(canvas, 60 * mm, 29.5 * mm)
+
+        vehiculo = Paragraph( self.tarjeta.resolucion_autorizacion.get_vehiculo_display().upper()  , normal_custom3(8.5, TA_LEFT))
+        w, h = vehiculo.wrap(doc.width, doc.topMargin)
+        vehiculo.drawOn(canvas, 60 * mm, 38.05 * mm)
 
         canvas.restoreState()
 
@@ -209,3 +255,102 @@ class ImpresionTarjeta:
         pdf = buffer.getvalue()
         buffer.close()
         return pdf
+
+class ImpresionVehiculos:
+  def __init__(self, buffer, pagesize):
+    self.buffer = buffer
+    if pagesize == 'A4':
+      self.pagesize = landscape(A4)
+    elif pagesize == 'Letter':
+      self.pagesize = letter
+      self.width, self.height = self.pagesize
+
+  @staticmethod
+  def _header_footer(canvas, doc, empresa):
+    canvas.saveState()
+
+    ##logo = 'front/static/front/images/peru.jpg'
+
+    #canvas.drawImage(logo, doc.leftMargin + 50, doc.height + doc.topMargin + 160, width = (2.3 * cm), height = (2.3 * cm))
+    
+
+    # Cabecera
+    header = Paragraph('Municipalidad Provincial de Urubamba', negrita_custom(9, TA_CENTER))
+    w, h = header.wrap(doc.width, doc.topMargin)
+    header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin)
+
+    header = Paragraph('Listado de vehiculos por empresa', negrita_custom(10, TA_CENTER))
+    w, h = header.wrap(doc.width, doc.topMargin)
+    header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 5 * mm)
+
+    header = Paragraph(empresa.razon_social, negrita_custom(8, TA_CENTER) )
+    w, h = header.wrap(doc.width, doc.topMargin)
+    header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 10 * mm)
+
+    canvas.restoreState()
+
+
+  def print_vehiculos(self, empresa):
+    buffer = self.buffer
+    doc = SimpleDocTemplate(buffer, pagesize = self.pagesize, topMargin = 60, leftMargin = 50, rightMargin = 50, bottomMargin = 20, showBoundary = 0)
+
+    elements  = []
+
+
+
+    detalles_data = [
+        ['Propietario', 'Placa', 'Clase', 'Marca', 'Año Fabricacion', 'Modelo', 'Ruta', 'Pasajeros', 'Poliza'],
+    ]
+
+    tarjetas = TarjetaCirculacion.objects.filter(resolucion_autorizacion__razon_social__id = empresa.id)
+
+    for tarjeta in tarjetas:
+        propietario = Paragraph(tarjeta.propietario, normal_custom(7, TA_LEFT))
+        placa = Paragraph(tarjeta.placa, normal_custom(7, TA_LEFT))
+        clase = Paragraph(tarjeta.clase, normal_custom(7, TA_LEFT))
+        marca = Paragraph(tarjeta.marca, normal_custom(7, TA_LEFT))
+        anio_fabricacion = Paragraph(str(tarjeta.anio_fabricacion), normal_custom(7, TA_LEFT))
+        modelo = Paragraph(tarjeta.modelo, normal_custom(7, TA_LEFT))
+        nro_ruta = Paragraph(str(tarjeta.nro_ruta), normal_custom(7, TA_LEFT))
+        pasajeros = Paragraph(str(tarjeta.pasajeros), normal_custom(7, TA_LEFT))
+        poliza = Paragraph(tarjeta.poliza_seguro, normal_custom(7, TA_LEFT))
+        detalles_data.append([
+          propietario, placa, clase, marca, anio_fabricacion, modelo, nro_ruta, pasajeros, poliza
+        ])
+
+    detalles_tabla = Table(detalles_data, colWidths = [None], style = table_estilo(),
+    repeatRows = 1)
+
+    elements.append(detalles_tabla)
+
+
+    doc.build(elements, onFirstPage = partial(self._header_footer, empresa = empresa),
+      onLaterPages = partial(self._header_footer, empresa = empresa), canvasmaker = NumberedCanvas)
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    return pdf
+
+class NumberedCanvas(canvas.Canvas):
+  def __init__(self, *args, **kwargs):
+    canvas.Canvas.__init__(self, *args, **kwargs)
+    self._saved_page_states = []
+
+  def showPage(self):
+    self._saved_page_states.append(dict(self.__dict__))
+    self._startPage()
+
+  def save(self):
+    """add page info to each page (page x of y)"""
+    num_pages = len(self._saved_page_states)
+    for state in self._saved_page_states:
+      self.__dict__.update(state)
+      self.draw_page_number(num_pages)
+      canvas.Canvas.showPage(self)
+      canvas.Canvas.save(self)
+
+  def draw_page_number(self, page_count):
+    # Change the position of this to wherever you want the page number to be
+    self.setFont('Helvetica', 9)
+    self.drawRightString(286 * mm, 205 * mm,
+      u"Página %d de %d" % (self._pageNumber, page_count))

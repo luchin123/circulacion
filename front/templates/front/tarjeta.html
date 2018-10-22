@@ -19,8 +19,8 @@
             {% endif %}
             <form action="" method="post">
                 <div class="form-group">
-                    <label for="">Resolucion:</label>
-                    <input type="text" class="form-control ac-circulacion" placeholder="Buscar la resolución" required value="{{form.instance.resolucion_autorizacion}}">
+                    <label for="">Empresa:</label>
+                    <input type="text" class="form-control ac-circulacion" placeholder="Buscar la Empresa" required value="{{form.instance.resolucion_autorizacion}}">
                     <input type="hidden" id="id_circulacion" value="{{form.instance.resolucion_autorizacion.pk}}" name="resolucion">
                 </div>
                 {% for field in  form %}

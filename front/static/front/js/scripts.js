@@ -28,8 +28,8 @@
                         console.log(item);
                         return {
                             data: item,
-                            label: item.resolucion_autorizacion,
-                            value: item.resolucion_autorizacion
+                            label: item.razon_social.razon_social,
+                            value: item.razon_social.razon_social
                         }
                     }));
                 }

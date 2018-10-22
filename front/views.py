@@ -330,8 +330,10 @@ def empresas_json(request):
     rows = []
     for entidad in empresas:
 
-        links = crear_enlace(reverse('front:empresa', args=[entidad.id]), 'success', 'Ver o Editar', 'edit')
-        links += crear_enlace(reverse('front:resoluciones_entidad', args=[entidad.id]), 'danger', 'Ver Resoluciones', 'ban')
+        links = crear_enlace(reverse('front:empresa', args=[entidad.id]), 'primary', 'Ver o Editar', 'edit')
+        links += crear_enlace(reverse('front:resoluciones_entidad', args=[entidad.id]), 'warning', 'Ver Resoluciones', 'list')
+        links += crear_enlace(reverse('reporte:vehiculos_pdf', args=[entidad.id]), 'danger', 'Imprimir PDF', 'file-pdf-o')
+        links += crear_enlace(reverse('reporte:vehiculos_excel', args=[entidad.id]), 'success', 'Imprimir Excel', 'file-excel-o')
 
         obj = OrderedDict({
             '0': entidad.get_tipo_display(),

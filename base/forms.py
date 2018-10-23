@@ -101,8 +101,9 @@ class TarjetaCirculacionForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': u'Placa',
             }),
-            'clase': Select(attrs={
+            'clase': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': u'Clase',
             }),
             'marca': TextInput(attrs={
                 'class': 'form-control',
